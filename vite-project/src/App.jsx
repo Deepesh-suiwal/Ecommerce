@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Products from "./component/Products";
 
 function App() {
   const [products, setProducts] = useState(null);
+
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get("https://fakestoreapi.com/products");
@@ -10,24 +12,13 @@ function App() {
     }
     fetchData();
   }, []);
+
   return (
     <>
-      {products
-        ? products.map((product) => {
-            return (
-              <div key={product.id} className="product">
-                <div className="product-photo">
-                  <img src={product.image} alt="productImage" />
-                </div>
-                <div className="content">
-                  <h3>{product.title}</h3>
-                  <p>{product.price}</p>
-                  <a href="">Add To Cart</a>
-                </div>
-              </div>
-            );
-          })
-        : ""}
+      <div className="products">
+        {products ? <Products  products={products}/> : ""}
+        
+      </div>
     </>
   );
 }
