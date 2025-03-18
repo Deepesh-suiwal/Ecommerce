@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 function Product({ product }) {
-  const [cart, setCart] = useState([]);
-  function handleAddToCart(product) {
-    setCart([...cart, product]);
-  }
-  console.log(cart);
+  // const [cart, setCart] = useState([]);
+  // function handleAddToCart(product) {
+  //   setCart([...cart, product]);
+  // }
+  // console.log(cart);
 
   function shortTitle(title) {
     return title.length > 30 ? title.substring(0, 30) + "..." : title;
@@ -17,7 +17,7 @@ function Product({ product }) {
         <div className="product-photo h-60 w-50">
           <img
             src={product.image}
-            onClick={() => handleAddToCart(product)}
+            // onClick={() => handleAddToCart(product)}
             alt="productImage"
           />
         </div>

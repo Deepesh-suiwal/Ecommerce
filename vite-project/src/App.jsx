@@ -1,23 +1,59 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Products from "./component/Products";
+import { Link } from "react-router-dom";
 
 function App() {
-  const [products, setProducts] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [datacategory, setDataCategory] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await axios.get("https://fakestoreapi.com/products");
-      setProducts(response.data);
-    }
     fetchData();
   }, []);
 
+  useEffect(() => {
+    fetching();
+  }, [products]);
+
+  async function fetchData() {
+    const response = await axios.get("https://fakestoreapi.com/products");
+
+    setProducts(response.data);
+  }
+
+  function fetching() {
+    const temp = [];
+    products.map((product) =>
+      !temp.includes(product.category) ? temp.push(product.category) : ""
+    );
+    setDataCategory(temp);
+  }
+
+  function filterCatagory(data) {
+    const filtered = products.filter((product) => {
+      return product.category === data;
+    });
+    setFilteredData(filtered);
+  }
+
   return (
     <>
-      <div className="products">
-        {products ? <Products  products={products}/> : ""}
-        
+      <div className="mainParent flex">
+        <div className="w-[20%] border-black border-r-2 text-center">
+          {datacategory.map((OBJ) => {
+            return (
+              <h1 key={OBJ} onClick={() => filterCatagory(OBJ)}>
+                {OBJ}
+              </h1>
+            );
+          })}
+        </div>
+        <div className="products w-[80%]">
+          <Products
+            products={filteredData.length > 0 ? filteredData : products}
+          />
+        </div>
       </div>
     </>
   );
