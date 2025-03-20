@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import About from "./pages/About";
@@ -7,9 +7,11 @@ import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
 import Header from "./component/Header";
 import Displaydata from "./component/Displaydata";
-
+ export const cartContext = createContext();
 function Home() {
+  const [cartBuy, setCartBuy] = useState([]);
   return (
+    <cartContext.Provider value={{cartBuy,setCartBuy}}>
     <BrowserRouter>
     <Header />
       <Routes>
@@ -21,6 +23,7 @@ function Home() {
         <Route path="/product/:id" element={<Displaydata/>}></Route>
       </Routes>
     </BrowserRouter>
+    </cartContext.Provider>
   );
 }
 

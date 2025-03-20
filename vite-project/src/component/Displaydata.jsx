@@ -1,21 +1,38 @@
-import React from "react";
-import { useLocation} from "react-router-dom"; 
+import React, { useContext, useState } from "react";
+import { createContext } from "react";
+import { useLocation } from "react-router-dom";
+import { cartContext } from "../Home";
 
 function Displaydata() {
-  const location = useLocation(); 
-  const { product } = location.state; 
+  const {cartBuy,setCartBuy}=useContext(cartContext)
+  
+  const location = useLocation();
+
+  const { product } = location.state;
+
+  function addToCart(product){
+    setCartBuy([...cartBuy,product])
+  }
+  console.log(cartBuy);
 
   return (
-    <div className="product-details">
-      <div className="product-photo2 h-100 w-60">
-        <img src={product.image} alt="Product Image" />
+    <div className="product-details p-2 flex flex-col items-center">
+      <div className="h-80 w-100">
+        <img
+          src={product.image}
+          alt="Product Image"
+          className="h-full w-full object-contain"
+        />
       </div>
-      <div className="details text-center">
+      <div className="details text-center m-1">
         <h2>{product.title}</h2>
         <p>{product.description}</p>
         <p>Price: ${product.price}</p>
 
-        <button className="button bg-red-400 text-white p-1.5">
+        <button
+          className="button bg-yellow-400 text-black p-1.5"
+          onClick={() => addToCart(product)}
+        >
           Add To Cart
         </button>
       </div>

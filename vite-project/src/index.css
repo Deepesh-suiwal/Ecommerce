@@ -4,13 +4,8 @@
     width: 100%;
     object-fit: contain;
 }
-.product-photo2 img{
-    height: 100%;
-    width: 100%;
-    object-fit: contain;
-}
 .product-photo2{
-margin: auto;
+margin: 0 auto;
 }
 .products{
     display: flex;
