@@ -4,14 +4,20 @@ import { useLocation } from "react-router-dom";
 import { cartContext } from "../Home";
 
 function Displaydata() {
-  const {cartBuy,setCartBuy}=useContext(cartContext)
-  
+  const { cartBuy, setCartBuy } = useContext(cartContext);
+
   const location = useLocation();
 
   const { product } = location.state;
 
-  function addToCart(product){
-    setCartBuy([...cartBuy,product])
+  function addToCart(product) {
+    const productExists = cartBuy.some((item) => item.id === product.id);
+
+    if (productExists) {
+      alert("This product is already in the cart!");
+    } else {
+      setCartBuy([...cartBuy, product]);
+    }
   }
   console.log(cartBuy);
 

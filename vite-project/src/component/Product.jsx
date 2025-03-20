@@ -7,7 +7,13 @@ function Product({ product }) {
   const navigate = useNavigate();
 
   function handleAddToCart(product) {
-    setCartBuy([...cartBuy, product]);
+    const productExists = cartBuy.some((item) => item.id === product.id);
+
+    if (productExists) {
+      alert("This product is already in the cart!");
+    } else {
+      setCartBuy([...cartBuy, product]);
+    }
   }
 
   function shortTitle(title) {
