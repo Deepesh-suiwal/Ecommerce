@@ -40,7 +40,7 @@ function App() {
   return (
     <>
       <div className="mainParent flex">
-        <div className="w-[20%] border-black border-r-2 text-center p-2">
+        <div className="w-[20%] border-black border-r-2 text-center p-2 font-bold text-[20px]">
           {datacategory.map((OBJ) => {
             return (
               <h1 key={OBJ} onClick={() => filterCatagory(OBJ)}>

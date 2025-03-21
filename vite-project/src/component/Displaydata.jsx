@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { createContext } from "react";
 import { useLocation } from "react-router-dom";
 import { cartContext } from "../Home";
 
@@ -33,10 +32,10 @@ function Displaydata() {
       <div className="details text-center m-1">
         <h2>{product.title}</h2>
         <p>{product.description}</p>
-        <p>Price: ${product.price}</p>
+        <p><span className="font-bold">price: $</span>{product.price}</p>
 
         <button
-          className="button bg-yellow-400 text-black p-1.5"
+          className="button bg-yellow-400 text-black p-1.5 font-bold"
           onClick={() => addToCart(product)}
         >
           Add To Cart
