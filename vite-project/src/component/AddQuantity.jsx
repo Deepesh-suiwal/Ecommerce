@@ -1,46 +1,56 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Product from "./Product";
 import { cartContext } from "../Home";
 import { MdRemoveShoppingCart } from "react-icons/md";
 
 function AddQuantity({ Product }) {
-  const { cartBuy, setCartBuy } = useContext(cartContext);
-  // const [state,setState]=useState(null)
+  const {
+    cartBuy,
+    setCartBuy,
+    localQuantity,
+    setLocalQuantity,
+    increaseNumber,
+    decreaseNumber,
+    deleteCart,
+  } = useContext(cartContext);
 
-  function increaseNumber(product) {
-    // setState(state+1)
-    setCartBuy([...cartBuy, product]);
-  }
-  function decreaseNumber(Product) {
-    const indexToDelete = cartBuy.findIndex((obj) => {
-      return obj.id === Product.id;
-    });
-    setCartBuy(
-      cartBuy.filter((obj, index) => {
-        return index !== indexToDelete;
-      })
+  useEffect(() => {
+    setLocalQuantity(
+      cartBuy.find((existingProduct) => existingProduct.id === Product.id)
+        .quantity
     );
-  }
-  console.log(cartBuy);
+  }, [Product, cartBuy]);
+
   return (
     <>
       <div className="miniCart flex items-center justify-center">
         <div className="cartQty flex items-center justify-center px-6">
           <button
-            className="increaseQty border m-1"
-            onClick={() => increaseNumber(Product)}
+            className="increaseQty px-1 bg-amber-400 cursor-pointer"
+            onClick={() => {
+              setLocalQuantity((prev) => prev + 1);
+              increaseNumber(Product);
+            }}
           >
-            +1
+            +
           </button>
-          <p>{}</p>
+          <p className="bg-gray-300 px-2">{localQuantity}</p>
           <button
-            className="increaseQty border"
-            onClick={() => decreaseNumber(Product)}
+            className="increaseQty px-1 bg-amber-400 cursor-pointer"
+            onClick={() => {
+              setLocalQuantity((prev) => prev - 1);
+              decreaseNumber(Product);
+            }}
           >
-            -1
+            -
           </button>
         </div>
-        <MdRemoveShoppingCart className="removeCart" />
+        <MdRemoveShoppingCart
+          className="removeCart"
+          onClick={() => {
+            deleteCart(Product);
+          }}
+        />
       </div>
     </>
   );

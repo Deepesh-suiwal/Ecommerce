@@ -1,17 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { cartContext } from "../Home";
+import AddQuantity from "../component/AddQuantity";
 
 function Cart() {
-  const { cartBuy, setCartBuy } = useContext(cartContext);
+  const { cartBuy } = useContext(cartContext);
 
-  function deleteCart(product) {
-    const indexToDelete = cartBuy.findIndex((item) => item.id == product.id);
-    setCartBuy(
-      cartBuy.filter((obj, index) => {
-        return index !== indexToDelete;
-      })
-    );
-  }
   return (
     <>
       {cartBuy.map((product) => {
@@ -37,12 +30,11 @@ function Cart() {
                 <span className="font-bold">Price: $</span>
                 {product.price}
               </p>
-              <button
-                className="bg-yellow-400 text-black p-1.5 font-bold"
-                onClick={() => deleteCart(product)}
-              >
-                Remove from cart
-              </button>
+              <div className="miniCart flex items-center ">
+                <div className="cartQty flex items-center px-6">
+                  <AddQuantity Product={product} />
+                </div>
+              </div>
             </div>
           </div>
         );

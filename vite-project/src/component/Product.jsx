@@ -8,9 +8,8 @@ function Product({ product }) {
   const navigate = useNavigate();
 
   function handleAddToCart(product) {
-    const productExists = cartBuy.some((item) => item.id === product.id);
 
-    setCartBuy([...cartBuy, product]);
+    setCartBuy([...cartBuy, { ...product, quantity: 1 }]);
   }
 
   function shortTitle(title) {

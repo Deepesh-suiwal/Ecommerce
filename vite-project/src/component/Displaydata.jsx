@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import { cartContext } from "../Home";
 import AddQuantity from "./AddQuantity";
 
-
 function Displaydata() {
   const { cartBuy, setCartBuy, isProductInCart } = useContext(cartContext);
 
@@ -11,16 +10,9 @@ function Displaydata() {
 
   const { product } = location.state;
 
-  function addToCart(product) {
-    const productExists = cartBuy.some((item) => item.id === product.id);
-
-    if (productExists) {
-      alert("This product is already in the cart!");
-    } else {
-      setCartBuy([...cartBuy, product]);
-    }
+  function handleAddToCart(product) {
+    setCartBuy([...cartBuy, { ...product, quantity: 1 }]);
   }
-  console.log(cartBuy);
 
   return (
     <div className="product-details p-2 flex flex-col items-center">
@@ -34,18 +26,21 @@ function Displaydata() {
       <div className="details text-center m-1">
         <h2>{product.title}</h2>
         <p>{product.description}</p>
-        <p><span className="font-bold">price: $</span>{product.price}</p>
+        <p>
+          <span className="font-bold">price: $</span>
+          {product.price}
+        </p>
 
         {isProductInCart(product) ? (
-            <AddQuantity Product={product} />
-          ) : (
-            <button
-              className="button bg-yellow-400 text-black p-1.5 font-bold"
-              onClick={() => addToCart(product)}
-            >
-              Add To Cart
-            </button>
-          )}
+          <AddQuantity Product={product} />
+        ) : (
+          <button
+            className="button bg-yellow-400 text-black p-1.5 font-bold"
+            onClick={() => handleAddToCart(product)}
+          >
+            Add To Cart
+          </button>
+        )}
       </div>
     </div>
   );

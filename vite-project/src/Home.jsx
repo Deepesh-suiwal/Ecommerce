@@ -10,15 +10,56 @@ import Displaydata from "./component/Displaydata";
 export const cartContext = createContext();
 function Home() {
   const [cartBuy, setCartBuy] = useState([]);
+  const [localQuantity, setLocalQuantity] = useState("");
 
   function isProductInCart(product) {
     const productFound = cartBuy.some((cartItems) => {
-       return cartItems.id == product.id;
+      return cartItems.id == product.id;
     });
     return productFound;
   }
+
+  function increaseNumber(product) {
+    setCartBuy(
+      cartBuy.map((existingProduct) =>
+        existingProduct.id === product.id
+          ? { ...existingProduct, quantity: existingProduct.quantity + 1 }
+          : existingProduct
+      )
+    );
+  }
+
+  function decreaseNumber(Product) {
+    setCartBuy(
+      cartBuy.map((existingProduct) =>
+        existingProduct.id === Product.id
+          ? { ...existingProduct, quantity: existingProduct.quantity - 1 }
+          : existingProduct
+      )
+    );
+  }
+
+  function deleteCart(Product) {
+    setCartBuy(
+      cartBuy.filter((obj) => {
+        return obj.id !== Product.id;
+      })
+    );
+  }
+
   return (
-    <cartContext.Provider value={{ cartBuy, setCartBuy, isProductInCart }}>
+    <cartContext.Provider
+      value={{
+        cartBuy,
+        setCartBuy,
+        isProductInCart,
+        localQuantity,
+        setLocalQuantity,
+        increaseNumber,
+        decreaseNumber,
+        deleteCart,
+      }}
+    >
       <BrowserRouter>
         <Header />
         <Routes>
