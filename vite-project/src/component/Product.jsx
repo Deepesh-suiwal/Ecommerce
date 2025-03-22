@@ -38,7 +38,7 @@ function Product({ product }) {
             {product.price}
           </p>
           {isProductInCart(product) ? (
-            <AddToCart Product={product} />
+            <AddQuantity Product={product} />
           ) : (
             <button
               className="button bg-yellow-400 text-black p-1.5 font-bold"

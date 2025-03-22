@@ -1,9 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { cartContext } from "../Home";
+import AddQuantity from "./AddQuantity";
+
 
 function Displaydata() {
-  const { cartBuy, setCartBuy } = useContext(cartContext);
+  const { cartBuy, setCartBuy, isProductInCart } = useContext(cartContext);
 
   const location = useLocation();
 
@@ -34,12 +36,16 @@ function Displaydata() {
         <p>{product.description}</p>
         <p><span className="font-bold">price: $</span>{product.price}</p>
 
-        <button
-          className="button bg-yellow-400 text-black p-1.5 font-bold"
-          onClick={() => addToCart(product)}
-        >
-          Add To Cart
-        </button>
+        {isProductInCart(product) ? (
+            <AddQuantity Product={product} />
+          ) : (
+            <button
+              className="button bg-yellow-400 text-black p-1.5 font-bold"
+              onClick={() => addToCart(product)}
+            >
+              Add To Cart
+            </button>
+          )}
       </div>
     </div>
   );

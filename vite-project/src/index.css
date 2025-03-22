@@ -23,3 +23,10 @@ margin: 0 auto;
 .product-photo{
     margin: auto;
 }
+.increaseQty{
+    margin: 6px;
+    padding: 0 5px;
+}
+.removeCart{
+    font-size: 22px;
+}

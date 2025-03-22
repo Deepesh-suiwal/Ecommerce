@@ -3,9 +3,14 @@ import { cartContext } from "../Home";
 
 function Cart() {
   const { cartBuy, setCartBuy } = useContext(cartContext);
+
   function deleteCart(product) {
-    const updatedCart = cartBuy.filter((item) => item.id !== product.id);
-    setCartBuy(updatedCart);
+    const indexToDelete = cartBuy.findIndex((item) => item.id == product.id);
+    setCartBuy(
+      cartBuy.filter((obj, index) => {
+        return index !== indexToDelete;
+      })
+    );
   }
   return (
     <>
