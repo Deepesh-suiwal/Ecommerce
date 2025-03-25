@@ -28,16 +28,17 @@ function Home() {
       )
     );
   }
-
+  
   function decreaseNumber(Product) {
     setCartBuy(
       cartBuy.map((existingProduct) =>
         existingProduct.id === Product.id
-          ? { ...existingProduct, quantity: existingProduct.quantity - 1 }
+          ? { ...existingProduct, quantity: Math.max(existingProduct.quantity - 1, 1) } // Prevent negative quantity
           : existingProduct
       )
     );
   }
+  
 
   function deleteCart(Product) {
     setCartBuy(

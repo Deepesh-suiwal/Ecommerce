@@ -8,8 +8,19 @@ function Product({ product }) {
   const navigate = useNavigate();
 
   function handleAddToCart(product) {
+    const existingProduct = cartBuy.find((item) => item.id === product.id);
 
-    setCartBuy([...cartBuy, { ...product, quantity: 1 }]);
+    if (!existingProduct) {
+      setCartBuy([...cartBuy, { ...product, quantity: 1 }]);
+    } else {
+      setCartBuy(
+        cartBuy.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    }
   }
 
   function shortTitle(title) {
