@@ -1,13 +1,14 @@
 import React, { createContext, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import First from "./component/First";
 import App from "./App";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
 import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
-import Header from "./component/Header";
 import Displaydata from "./component/Displaydata";
 export const cartContext = createContext();
+
 function Home() {
   const [cartBuy, setCartBuy] = useState([]);
   const [localQuantity, setLocalQuantity] = useState("");
@@ -28,17 +29,19 @@ function Home() {
       )
     );
   }
-  
+
   function decreaseNumber(Product) {
     setCartBuy(
       cartBuy.map((existingProduct) =>
         existingProduct.id === Product.id
-          ? { ...existingProduct, quantity: Math.max(existingProduct.quantity - 1, 1) } // Prevent negative quantity
+          ? {
+              ...existingProduct,
+              quantity: Math.max(existingProduct.quantity - 1, 1),
+            }
           : existingProduct
       )
     );
   }
-  
 
   function deleteCart(Product) {
     setCartBuy(
@@ -48,31 +51,56 @@ function Home() {
     );
   }
 
+  const name = createBrowserRouter([
+    {
+      path: "/",
+      element: <First />,
+      children: [
+        {
+          index: true,
+          element: <App />,
+        },
+        {
+          path: "/About",
+          element: <About />,
+        },
+        {
+          path: "/Contact",
+          element: <Contact />,
+        },
+        {
+          path: "/blog",
+          element: <Blog />,
+        },
+        {
+          path: "/Cart",
+          element: <Cart />,
+        },
+        {
+          path: "/product/:id",
+          element: <Displaydata />,
+        },
+      ],
+    },
+  ]);
+
   return (
-    <cartContext.Provider
-      value={{
-        cartBuy,
-        setCartBuy,
-        isProductInCart,
-        localQuantity,
-        setLocalQuantity,
-        increaseNumber,
-        decreaseNumber,
-        deleteCart,
-      }}
-    >
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<App />}></Route>
-          <Route path="/about" element={<About />}></Route>
-          <Route path="/blog" element={<Blog />}></Route>
-          <Route path="/cart" element={<Cart />}></Route>
-          <Route path="/contact" element={<Contact />}></Route>
-          <Route path="/product/:id" element={<Displaydata />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </cartContext.Provider>
+    <>
+      <cartContext.Provider
+        value={{
+          cartBuy,
+          setCartBuy,
+          isProductInCart,
+          localQuantity,
+          setLocalQuantity,
+          increaseNumber,
+          decreaseNumber,
+          deleteCart,
+        }}
+      >
+         <RouterProvider router={name} />;
+      </cartContext.Provider>
+    </>
   );
 }
 

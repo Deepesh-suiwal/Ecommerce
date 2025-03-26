@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Products from "./component/Products";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -41,6 +41,7 @@ function App() {
     <>
       <div className="mainParent flex">
         <div className="w-[20%] border-black border-r-2 text-center p-2 font-bold text-[20px]">
+          <input type="text" placeholder="Click_Here to Search item" />
           {datacategory.map((OBJ) => {
             return (
               <h1 key={OBJ} onClick={() => filterCatagory(OBJ)}>
