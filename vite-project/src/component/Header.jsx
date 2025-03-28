@@ -2,7 +2,12 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { cartContext } from "../Home";
 function Header() {
-  const { cartBuy } = useContext(cartContext);
+  // const navigate = useNavigate()
+  const { cartBuy, isAuthenticated, logOut } = useContext(cartContext);
+  function handleLogOut() {
+    logOut();
+    // navigate("/login");
+  }
   return (
     <>
       <header className="flex items-center justify-between p-1 m-1 bg-yellow-400 text-black font-[500]">
@@ -24,6 +29,15 @@ function Header() {
           <li className="p-2">
             <Link to="/contact">Contact</Link>
           </li>
+          {isAuthenticated ? (
+            <li className="cursor-pointer p-2">
+              <button onClick={handleLogOut}>Sign Out</button>
+            </li>
+          ) : (
+            <li className="cursor-pointer p-2">
+              <Link to="/register">sign up</Link>
+            </li>
+          )}
         </ul>
       </header>
     </>
