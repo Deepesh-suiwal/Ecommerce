@@ -1,5 +1,4 @@
 import React, { createContext, useState } from "react";
-import axios from "axios";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import First from "./component/First";
 import App from "./App";
@@ -12,16 +11,13 @@ import Login from "./component/Login";
 import Register from "./component/Register";
 import MyOrder from "./component/MyOrder";
 import ProtectedRoute from "./component/ProtectedRoute";
-import SignOut from "./component/SignOut";
-
+import AuthProvider from "./context/AuthContext";
 export const cartContext = createContext();
-
 
 function Home() {
   const [cartBuy, setCartBuy] = useState([]);
   const [localQuantity, setLocalQuantity] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+
 
   function isProductInCart(product) {
     const productFound = cartBuy.some((cartItems) => {
@@ -61,39 +57,6 @@ function Home() {
     );
   }
 
-  async function fetchStatus() {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        "https://ecommerce-api-8ga2.onrender.com/user/me",
-        { withCredentials: true }
-      );
-      // console.log(response);
-      if (response.status === 200) {
-        setIsAuthenticated(true);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setIsAuthenticated(false);
-    } finally {
-      setLoading(false);
-    }
-  }
-  async function logOut() {
-    try {
-      const response = await axios.post("https://ecommerce-api-8ga2.onrender.com/user/logout",
-        {withCredentials:true}
-      )
-
-      if (response.status === 200) {
-        setIsAuthenticated(false)
-      }
-    } catch (error) {
-     console.log("logOut failed");
-    }
-  }
-
   const name = createBrowserRouter([
     {
       path: "/",
@@ -101,42 +64,63 @@ function Home() {
       children: [
         {
           index: true,
-          element: <App />,
+          element: (
+            <ProtectedRoute>
+              <App />
+            </ProtectedRoute>
+          ),
         },
         {
-          path: "/About",
-          element: <About />,
+          path: "/about",
+          element: (
+            <ProtectedRoute>
+              <About />
+            </ProtectedRoute>
+          ),
         },
         {
-          path: "/Contact",
-          element: <Contact />,
+          path: "/contact",
+          element: (
+            <ProtectedRoute>
+              <Contact />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/blog",
-          element: <Blog />,
+          element: (
+            <ProtectedRoute>
+              <Blog />
+            </ProtectedRoute>
+          ),
+        },
+
+        {
+          path: "Cart",
+          element: (
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          ),
         },
         {
-          path: "/Cart",
-          element: <Cart />,
+          path: "product/:id",
+          element: (
+            <ProtectedRoute>
+              <Displaydata />
+            </ProtectedRoute>
+          ),
         },
         {
-          path: "/product/:id",
-          element: <Displaydata />,
-        },
-        {
-          path:"/login",
-          element: < Login/>
-        },
-        {
-          path: "/sign-out",
-          element: <SignOut />,
+          path: "/login",
+          element: <Login />,
         },
         {
           path: "/register",
           element: <Register />,
         },
         {
-          path: "/my-orders",
+          path: "my-orders",
           element: (
             <ProtectedRoute>
               <MyOrder />
@@ -149,25 +133,22 @@ function Home() {
 
   return (
     <>
-      <cartContext.Provider
-        value={{
-          cartBuy,
-          setCartBuy,
-          isProductInCart,
-          localQuantity,
-          loading,
-          setLocalQuantity,
-          increaseNumber,
-          decreaseNumber,
-          deleteCart,
-          isAuthenticated,
-          setIsAuthenticated,
-          fetchStatus,
-          logOut,
-        }}
-      >
-        <RouterProvider router={name} />
-      </cartContext.Provider>
+      <AuthProvider>
+        <cartContext.Provider
+          value={{
+            cartBuy,
+            setCartBuy,
+            isProductInCart,
+            localQuantity,
+            setLocalQuantity,
+            increaseNumber,
+            decreaseNumber,
+            deleteCart,
+          }}
+        >
+          <RouterProvider router={name} />
+        </cartContext.Provider>
+      </AuthProvider>
     </>
   );
 }

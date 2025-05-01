@@ -1,12 +1,19 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { getAuth } from "firebase/auth";
+import app from "../firebase";
 import { cartContext } from "../Home";
+const auth = getAuth(app);
+
 function Header() {
-  // const navigate = useNavigate()
-  const { cartBuy, isAuthenticated, logOut } = useContext(cartContext);
-  function handleLogOut() {
-    logOut();
-    // navigate("/login");
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { cartBuy } = useContext(cartContext);
+
+  function handleLogout() {
+    auth.signOut();
+    navigate("/login");
   }
   return (
     <>
@@ -29,13 +36,13 @@ function Header() {
           <li className="p-2">
             <Link to="/contact">Contact</Link>
           </li>
-          {isAuthenticated ? (
+          {user ? (
             <li className="cursor-pointer p-2">
-              <button onClick={handleLogOut}>Sign Out</button>
+              <button onClick={handleLogout}>Logout</button>
             </li>
           ) : (
             <li className="cursor-pointer p-2">
-              <Link to="/register">sign up</Link>
+              <Link to="/login">Login</Link>
             </li>
           )}
         </ul>

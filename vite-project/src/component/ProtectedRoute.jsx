@@ -1,24 +1,27 @@
-import { useContext, useEffect, useState } from "react";
-import Login from "./Login";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
-import { cartContext } from "../Home";
 
 function ProtectedRoute({ children }) {
-  
+  const { user, loading } = useAuth();
 
-  const { isAuthenticated, fetchStatus, loading } =
-    useContext(cartContext);
+  const [checkingStatus, setCheckingStatus] = useState(true);
 
   useEffect(() => {
-    fetchStatus();
+    const timer = setTimeout(() => {
+      setCheckingStatus(false);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, []);
 
-  // console.log(isAuthenticated);
+  if (loading) return <h1>Loading...</h1>;
 
-  if (loading) return <div>Loading...</div>;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  return children;
 }
 
 export default ProtectedRoute;

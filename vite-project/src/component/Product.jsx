@@ -7,9 +7,7 @@ function Product({ product }) {
   const { cartBuy, setCartBuy, isProductInCart } = useContext(cartContext);
   const navigate = useNavigate();
 
-
   function handleAddToCart(product) {
-
     const existingProduct = cartBuy.find((item) => item.id === product.id);
 
     if (!existingProduct) {
