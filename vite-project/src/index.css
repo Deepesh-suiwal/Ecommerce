@@ -14,7 +14,7 @@
   justify-content: space-evenly;
 }
 .parent {
-  width: 31%;
+  width: 22%;
   padding: 1rem 2rem;
 }
 .button {
@@ -26,3 +26,34 @@
 .removeCart {
   font-size: 22px;
 }
+.header{
+  background-color: #1e2939;
+  color: #fff;
+}
+.parent{
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.363);
+  border-radius: 10px;
+  margin: 5px;
+}
+.parent:hover{
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.523);
+}
+.WishButton{
+  background-color: #1e2939;
+}
+li:hover{
+  color: #fdc700;
+}
+.WishButtonDisplayData{
+  background-color: #f6339a;
+}
+.displayImage{
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.363);
+  border-radius: 10px;
+  margin: 5px;
+}
+.displayImage:hover{
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.523);
+}
+
+

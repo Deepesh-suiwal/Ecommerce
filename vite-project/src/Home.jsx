@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import First from "./component/First";
 import App from "./App";
 import About from "./pages/About";
-import Blog from "./pages/Blog";
+import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
 import Displaydata from "./component/Displaydata";
@@ -17,7 +17,6 @@ export const cartContext = createContext();
 function Home() {
   const [cartBuy, setCartBuy] = useState([]);
   const [localQuantity, setLocalQuantity] = useState("");
-
 
   function isProductInCart(product) {
     const productFound = cartBuy.some((cartItems) => {
@@ -64,33 +63,21 @@ function Home() {
       children: [
         {
           index: true,
-          element: (
-            <ProtectedRoute>
-              <App />
-            </ProtectedRoute>
-          ),
+          element: <App />,
         },
         {
           path: "/about",
-          element: (
-            <ProtectedRoute>
-              <About />
-            </ProtectedRoute>
-          ),
+          element: <About />,
         },
         {
           path: "/contact",
-          element: (
-            <ProtectedRoute>
-              <Contact />
-            </ProtectedRoute>
-          ),
+          element: <Contact />,
         },
         {
-          path: "/blog",
+          path: "/wishList",
           element: (
             <ProtectedRoute>
-              <Blog />
+              <Wishlist />
             </ProtectedRoute>
           ),
         },
@@ -105,11 +92,7 @@ function Home() {
         },
         {
           path: "product/:id",
-          element: (
-            <ProtectedRoute>
-              <Displaydata />
-            </ProtectedRoute>
-          ),
+          element: <Displaydata />,
         },
         {
           path: "/login",

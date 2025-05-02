@@ -27,18 +27,17 @@ function Register() {
         form.email,
         form.password
       );
-      
-      setMessage({ type: "success", text: "Register successful!" });
 
       const check = userDetails.user;
+      setMessage({ type: "success", text: "Register successful!" });
 
       if (check) {
         setTimeout(() => {
           navigate("/login");
         }, 500);
       }
-      
-      setMessage({ type: "success", text: "Registration successful!" });
+
+      // setMessage({ type: "success", text: "Registration successful!" });
     } catch (error) {
       setMessage({ type: "error", text: error.message });
     }

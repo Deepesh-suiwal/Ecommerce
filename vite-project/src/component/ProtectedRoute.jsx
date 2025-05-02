@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { isLoggedIn, loading } = useAuth();
 
   const [checkingStatus, setCheckingStatus] = useState(true);
 
@@ -17,7 +17,7 @@ function ProtectedRoute({ children }) {
 
   if (loading) return <h1>Loading...</h1>;
 
-  if (!user) {
+  if (!isLoggedIn) {
     return <Navigate to="/login" replace />;
   }
 

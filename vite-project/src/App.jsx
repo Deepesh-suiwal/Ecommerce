@@ -5,43 +5,43 @@ import Products from "./component/Products";
 
 function App() {
   const [products, setProducts] = useState([]);
-  const [datacategory, setDataCategory] = useState([]);
+  // const [datacategory, setDataCategory] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    fetching();
-  }, [products]);
+  // useEffect(() => {
+  //   fetching();
+  // }, [products]);
 
   async function fetchData() {
     const response = await axios.get("https://fakestoreapi.com/products");
-console.log(response);
+    console.log(response.data);
 
-    setProducts(response.data);
+    setProducts(response.data)
   }
 
-  function fetching() {
-    const temp = [];
-    products.map((product) =>
-      !temp.includes(product.category) ? temp.push(product.category) : ""
-    );
-    setDataCategory(temp);
-  }
+  // function fetching() {
+  //   const temp = [];
+  //   products.map((product) =>
+  //     !temp.includes(product.category) ? temp.push(product.category) : ""
+  //   );
+  //   setDataCategory(temp);
+  // }
 
-  function filterCatagory(data) {
-    const filtered = products.filter((product) => {
-      return product.category === data;
-    });
-    setFilteredData(filtered);
-  }
+  // function filterCatagory(data) {
+  //   const filtered = products.filter((product) => {
+  //     return product.category === data;
+  //   });
+  //   setFilteredData(filtered);
+  // }
 
   return (
     <>
       <div className="mainParent flex">
-        <div className="w-[20%] border-black border-r-2 text-center p-2 font-bold text-[20px]">
+        {/* <div className="w-[20%] border-black border-r-2 text-center p-2 font-bold text-[20px]">
           <input type="text" placeholder="Click_Here to Search item" />
           {datacategory.map((OBJ) => {
             return (
@@ -50,10 +50,10 @@ console.log(response);
               </h1>
             );
           })}
-        </div>
-        <div className="products w-[80%]">
+        </div> */}
+        <div className="products">
           <Products
-            products={filteredData.length > 0 ? filteredData : products}
+            products={products}
           />
         </div>
       </div>

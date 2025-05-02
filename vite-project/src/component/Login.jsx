@@ -2,8 +2,8 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-// import { auth } from "../firebase";
 import app from "../firebase";
+import { useAuth } from "../context/AuthContext";
 
 const auth = getAuth(app);
 
@@ -18,6 +18,8 @@ function Login() {
     text: "",
   });
 
+  const { setIsLoggedIn } = useAuth();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -27,7 +29,8 @@ function Login() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, form.email, form.password);
-      setMessage({ type: "success", text: "Login successful!" });
+      setIsLoggedIn(true);
+      setMessage({ type: "success", text: "Login successfull!" });
       setTimeout(() => {
         navigate("/");
       }, 500);
