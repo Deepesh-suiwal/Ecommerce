@@ -41,9 +41,9 @@
 .WishButton{
   background-color: #1e2939;
 }
-li:hover{
+/* li:hover{
   color: #fdc700;
-}
+} */
 .WishButtonDisplayData{
   background-color: #f6339a;
 }
@@ -55,5 +55,11 @@ li:hover{
 .displayImage:hover{
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.523);
 }
+.name{
+  background-color: #f3f4f6;
 
+}
+p{
+  padding: 10px;
+}
 

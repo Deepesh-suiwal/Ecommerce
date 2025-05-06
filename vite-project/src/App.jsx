@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Products from "./component/Products";
 // import { Link } from "react-router-dom";
 
-function App() {
+function  App() {
   const [products, setProducts] = useState([]);
   // const [datacategory, setDataCategory] = useState([]);
   const [filteredData, setFilteredData] = useState([]);

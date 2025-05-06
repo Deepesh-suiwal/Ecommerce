@@ -12,6 +12,7 @@ import Register from "./component/Register";
 import MyOrder from "./component/MyOrder";
 import ProtectedRoute from "./component/ProtectedRoute";
 import AuthProvider from "./context/AuthContext";
+import Profile from "./component/Profile";
 export const cartContext = createContext();
 
 function Home() {
@@ -107,6 +108,14 @@ function Home() {
           element: (
             <ProtectedRoute>
               <MyOrder />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/profile",
+          element: (
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           ),
         },

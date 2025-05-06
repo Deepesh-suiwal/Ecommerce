@@ -58,7 +58,7 @@ function Register() {
                   : "bg-red-200 text-red-800"
               }`}
             >
-              {message.text}
+              {message.text}  
             </div>
           )}
 

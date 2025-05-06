@@ -1,55 +1,99 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getAuth } from "firebase/auth";
 import app from "../firebase";
 import { cartContext } from "../Home";
-import { FaRegUserCircle } from "react-icons/fa";
+import { FaRegUserCircle, FaShoppingCart, FaHeart } from "react-icons/fa";
 import { FaUserLarge } from "react-icons/fa6";
-import { FaShoppingCart } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
+import { AiOutlineHeart } from "react-icons/ai";
+import { MdOutlineShoppingCart, MdLogout } from "react-icons/md";
+
 const auth = getAuth(app);
 
 function Header() {
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, user } = useAuth(); 
   const { cartBuy } = useContext(cartContext);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   function handleLogout() {
     auth.signOut();
     setIsLoggedIn(false);
     navigate("/login");
   }
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
   return (
     <>
-      <header className=" header flex items-center justify-between py-1.5  px-[4rem] text-black font-[500]">
+      <header className="header flex items-center justify-between py-1.5 px-[4rem] text-black font-[500]">
         <h2 className="text-yellow-400 text-[22px]">🛍️ E-Commerce</h2>
-        <ul className="flex items-center justify-between p-1 m-1 text-[18px] ">
-          <li className="p-2 ">
+        <ul className="flex items-center justify-between p-1 m-1 text-[18px]">
+          <li className="p-2 hover:text-amber-300" onClick={()=> setIsDropdownOpen(false)}>
             <Link to="/">Home</Link>
           </li>
-          <li className="p-2">
+          <li className="p-2 hover:text-amber-300" onClick={()=> setIsDropdownOpen(false)}>
             <Link to="/about">About</Link>
           </li>
-          
-          <li className="p-2">
+          <li className="p-2 hover:text-amber-300" onClick={()=> setIsDropdownOpen(false)}>
             <Link to="/contact">Contact</Link>
           </li>
-          <li className="p-2">
-            <Link to="/wishList"><FaHeart/></Link>
+          <li className="p-2 hover:text-amber-300" onClick={()=> setIsDropdownOpen(false)}>
+            <Link to="/wishList">
+              <FaHeart />
+            </Link>
           </li>
-          <li className="p-2">
+          <li className="p-2 hover:text-amber-300" onClick={()=> setIsDropdownOpen(false)}>
             <Link to="/cart">
               <FaShoppingCart />
+              {/* <span className="text-sm text-red-500 ml-1">({cartBuy.length})</span> */}
             </Link>
-            {/* <span>({cartBuy.length})</span> */}
           </li>
 
           {isLoggedIn ? (
-            <li>
-              <button className="cursor-pointer p-2" onClick={handleLogout}>
-                <FaRegUserCircle />
+            <li className="relative" onClick={toggleDropdown}>
+              <button className="cursor-pointer p-2">
+                <FaRegUserCircle  />
               </button>
+              {isDropdownOpen && (
+                <ul className="absolute z-50 right-0 mt-2 bg-white shadow-md rounded text-black w-40">
+                  <li className="p-2 ">
+                    <Link to="/profile">My Profile</Link>
+                  </li>
+                  <li className="p-2 ">
+                    <Link to="/my-orders">My Orders</Link>
+                  </li>
+                  <li className="p-2  relative">
+                    <Link to="/wishlist" className="flex items-center gap-2">
+                      Wishlist
+                      <span className="relative flex items-center">
+                        <AiOutlineHeart />
+                        <span className="absolute top-[-10px] right-[-10px] bg-rose-400 font-bold text-black rounded-full w-4 h-4 flex justify-center items-center text-xs">
+                          0
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                  <li className="p-2  relative">
+                    <Link to="/cart" className="flex items-center gap-2">
+                      Cart
+                      <span className="relative flex items-center">
+                        <MdOutlineShoppingCart />
+                        <span className="absolute top-[-10px] right-[-10px] bg-rose-400 font-bold text-black rounded-full w-4 h-4 flex justify-center items-center text-xs">
+                          {cartBuy.length}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                  <li className="p-2  flex items-center gap-2 cursor-pointer">
+                    <MdLogout title="Logout" />
+                    <button onClick={handleLogout}>Logout</button>
+                  </li>
+                </ul>
+              )}
             </li>
           ) : (
             <li className="cursor-pointer p-2">
@@ -65,3 +109,4 @@ function Header() {
 }
 
 export default Header;
+
