@@ -17,6 +17,10 @@ export const cartContext = createContext();
 
 function Home() {
   const [cartBuy, setCartBuy] = useState([]);
+    const [cartId, setCartId] = useState([]);
+    const [wishListId, setWishListId] = useState([]);
+
+  
   const [localQuantity, setLocalQuantity] = useState("");
 
   function isProductInCart(product) {
@@ -136,6 +140,10 @@ function Home() {
             increaseNumber,
             decreaseNumber,
             deleteCart,
+            cartId,
+            setCartId,
+            setWishListId,
+            wishListId
           }}
         >
           <RouterProvider router={name} />

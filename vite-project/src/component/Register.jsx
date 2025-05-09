@@ -36,8 +36,6 @@ function Register() {
           navigate("/login");
         }, 500);
       }
-
-      // setMessage({ type: "success", text: "Registration successful!" });
     } catch (error) {
       setMessage({ type: "error", text: error.message });
     }
@@ -58,7 +56,7 @@ function Register() {
                   : "bg-red-200 text-red-800"
               }`}
             >
-              {message.text}  
+              {message.text}
             </div>
           )}
 

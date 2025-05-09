@@ -11,7 +11,7 @@ function AuthProvider({ children }) {
   const auth = getAuth(app);
 
   const unsubscribe = onAuthStateChanged(auth, (loggedInUser) => {
-    // setUser(loggedInUser);
+    setUser(loggedInUser);
     // setIsLoggedIn((prev) => !prev);
     loggedInUser ? setIsLoggedIn(true) : setIsLoggedIn(false);
     setLoading(false);
