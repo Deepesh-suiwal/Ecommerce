@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { cartContext } from "../Home";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 function Wishlist() {
   const { wishListId, setWishListId } = useContext(cartContext);
   const { user } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -17,26 +18,38 @@ function Wishlist() {
     }
 
     async function fetchProducts() {
+      setLoading(true);
       try {
-        const products = [];
-        for (let id of wishListId) {
-          const res = await fetch(`https://fakestoreapi.com/products/${id}`);
-          const data = await res.json();
-          products.push(data);
+        let currentWishlist = wishListId;
+
+        if (wishListId.length === 0) {
+          const db = getFirestore();
+          const snap = await getDoc(doc(db, "wishlist", user.uid));
+          if (snap.exists()) {
+            currentWishlist = snap.data().items || [];
+            setWishListId(currentWishlist);
+          }
         }
+
+        const products = await Promise.all(
+          currentWishlist.map(async (productId) => {
+            const res = await fetch(
+              `https://fakestoreapi.com/products/${productId}`
+            );
+            return await res.json();
+          })
+        );
+
         setItems(products);
       } catch (error) {
-        console.error("Error fetching wishlist items:", error);
+        console.error("Error loading wishlist items:", error);
+      } finally {
+        setLoading(false);
       }
     }
 
-    if (wishListId.length > 0) {
-      fetchProducts();
-    } else {
-      setItems([]);
-    }
-  }, [user, navigate, wishListId]);
-
+    fetchProducts();
+  }, [user]);
 
   function shortText(text, max = 99) {
     return text.length > max ? text.substring(0, max) + "..." : text;
@@ -58,10 +71,13 @@ function Wishlist() {
       <h1 className="text-3xl font-bold text-center mb-3 text-blue-600">
         Your Wishlist ❤️
       </h1>
-      {items.length === 0 ? (
-        <p className="text-center text-lg">Your wishlist is empty.!</p>
+
+      {loading ? (
+        <p className="text-center">Loading...</p>
+      ) : items.length === 0 ? (
+        <p className="text-center text-lg">Your wishlist is empty!</p>
       ) : (
-        <div className="flex flex-wrap items-center justify-center gap-6 w-[100%]">
+        <div className="flex flex-wrap items-center justify-center gap-6 w-full">
           {items.map((product) => (
             <div
               key={product.id}
@@ -75,11 +91,11 @@ function Wishlist() {
               <p className="text-sm text-gray-700 p-1">
                 {shortText(product.description)}
               </p>
-              <p className="text-sm p-1 ">
+              <p className="text-sm p-1">
                 <span className="font-semibold">Category:</span>{" "}
                 {product.category}
               </p>
-              <p className="text-yellow-600 text-sm p-1 ">
+              <p className="text-yellow-600 text-sm p-1">
                 ⭐ {product.rating?.rate} / 5 ({product.rating?.count} reviews)
               </p>
               <p className="text-lg font-bold text-blue-700 p-1">
