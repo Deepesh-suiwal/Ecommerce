@@ -14,15 +14,26 @@ import ProtectedRoute from "./component/ProtectedRoute";
 import AuthProvider from "./context/AuthContext";
 import Profile from "./component/Profile";
 export const cartContext = createContext();
+import axios from "axios";
 
 function Home() {
   const [cartBuy, setCartBuy] = useState([]);
-    const [cartId, setCartId] = useState([]);
-    const [wishListId, setWishListId] = useState([]);
+  const [cartId, setCartId] = useState([]);
+  const [wishListId, setWishListId] = useState([]);
+  const [message, setMessage] = useState({ type: "", text: "" });
+  const [products, setProducts] = useState([]);
 
-  
   const [localQuantity, setLocalQuantity] = useState("");
+  function showMessage(type, text) {
+    setMessage({ type, text });
+    setTimeout(() => setMessage({ type: "", text: "" }), 1500);
+  }
 
+  async function fetchData() {
+    const response = await axios.get("https://fakestoreapi.com/products");
+    console.log(response.data);
+    setProducts(response.data);
+  }
   function isProductInCart(product) {
     const productFound = cartBuy.some((cartItems) => {
       return cartItems.id == product.id;
@@ -143,7 +154,13 @@ function Home() {
             cartId,
             setCartId,
             setWishListId,
-            wishListId
+            wishListId,
+            message,
+            setMessage,
+            showMessage,
+            products,
+            setProducts,
+            fetchData,
           }}
         >
           <RouterProvider router={name} />

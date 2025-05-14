@@ -17,7 +17,7 @@ function Contact() {
     console.log("Form Submitted:", formData);
   };
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6 min-h-screen">
       <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
       <p className="mb-8 text-gray-700">
         Let us know how we can help. If you have a question about our products,
@@ -32,7 +32,7 @@ function Contact() {
             type="text"
             name="name"
             placeholder="Your name"
-            // value={formData.name}
+            value={formData.name}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

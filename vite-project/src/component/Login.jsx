@@ -32,7 +32,7 @@ function Login() {
       setIsLoggedIn(true);
       setMessage({ type: "success", text: "Login successfull!" });
       setTimeout(() => {
-        navigate("/");
+        navigate("/profile");
       }, 500);
     } catch (error) {
       setMessage({ type: "error", text: error.message });

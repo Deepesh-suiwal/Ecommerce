@@ -26,40 +26,35 @@
 .removeCart {
   font-size: 22px;
 }
-.header{
+.header {
   background-color: #1e2939;
   color: #fff;
 }
-.parent{
+.parent {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.363);
   border-radius: 10px;
   margin: 5px;
 }
-.parent:hover{
+.parent:hover {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.523);
 }
-.WishButton{
+.WishButton {
   background-color: #1e2939;
 }
-/* li:hover{
-  color: #fdc700;
-} */
-.WishButtonDisplayData{
+.WishButtonDisplayData {
   background-color: #f6339a;
 }
-.displayImage{
+.displayImage {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.363);
   border-radius: 10px;
   margin: 5px;
 }
-.displayImage:hover{
+.displayImage:hover {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.523);
 }
-.name{
+.name {
   background-color: #f3f4f6;
-
 }
-p{
+.name p {
   padding: 10px;
 }
-

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
     name: "",
@@ -88,6 +90,10 @@ function Profile() {
 
       return () => clearTimeout(timeoutId);
     }
+  }
+
+  function Skip() {
+    navigate("/");
   }
 
   return (
@@ -217,6 +223,12 @@ function Profile() {
 
         <button className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
           Change Password
+        </button>
+        <button
+          className="ml-150 mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+          onClick={Skip}
+        >
+          Skip
         </button>
       </form>
     </div>

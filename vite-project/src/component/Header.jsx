@@ -14,7 +14,9 @@ const auth = getAuth(app);
 function Header() {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, user } = useAuth();
-  const { cartBuy, cartId, wishListId } = useContext(cartContext);
+
+  const { cartBuy, cartId, wishListId, message } = useContext(cartContext);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   function handleLogout() {
@@ -29,8 +31,20 @@ function Header() {
 
   return (
     <>
-      <header className="header flex items-center justify-between py-1.5 px-[4rem] text-black font-[500]">
+      <header className="header flex items-center justify-between py-1.5 px-[4rem] text-black font-[500] sticky top-0">
         <h2 className="text-yellow-400 text-[22px]">🛍️ E-Commerce</h2>
+
+        {message.text && (
+          <div
+            className={`mb-4 p-2 absolute top-5 left-[45%] text-center rounded ${
+              message.type === "error"
+                ? "bg-red-200 text-red-800"
+                : "bg-green-400 text-green-900"
+            }`}
+          >
+            {message.text}
+          </div>
+        )}
         <ul className="flex items-center justify-between p-1 m-1 text-[18px]">
           <li
             className="p-2 hover:text-amber-300"
@@ -51,7 +65,7 @@ function Header() {
             <Link to="/contact">Contact</Link>
           </li>
           <li
-            className="p-2 hover:text-amber-300 relative"
+            className="p-2 hover:text-amber-300 relative ml-1 mr-1"
             onClick={() => setIsDropdownOpen(false)}
           >
             <Link to="/wishlist" className="flex items-center gap-2">
@@ -66,16 +80,17 @@ function Header() {
             </Link>
           </li>
           <li
-            className="p-2 hover:text-amber-300 "
+            className="p-2 hover:text-amber-300 ml-1 mr-1"
             onClick={() => setIsDropdownOpen(false)}
           >
             <Link to="/cart" className="flex items-center gap-2">
               <span className="relative flex items-center">
                 <FaShoppingCart />
-                {user && (<span className="absolute top-[-10px] right-[-10px] bg-rose-400 font-bold text-black rounded-full w-4 h-4 flex justify-center items-center text-xs">
-                  {cartId.length}
-                </span>)}
-                
+                {user && (
+                  <span className="absolute top-[-10px] right-[-10px] bg-rose-400 font-bold text-black rounded-full w-4 h-4 flex justify-center items-center text-xs">
+                    {cartId.length}
+                  </span>
+                )}
               </span>
             </Link>
           </li>
@@ -117,7 +132,9 @@ function Header() {
                   </li>
                   <li className="p-2  flex items-center gap-2 cursor-pointer">
                     <MdLogout title="Logout" />
-                    <button onClick={handleLogout} className="cursor-pointer">Logout</button>
+                    <button onClick={handleLogout} className="cursor-pointer">
+                      Logout
+                    </button>
                   </li>
                 </ul>
               )}

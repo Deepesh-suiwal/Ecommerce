@@ -3,9 +3,9 @@ import { FaHeart } from "react-icons/fa";
 
 function Footer() {
     return (
-        <footer className="header py-1 px-10 text-center">
-          <p>&copy; {new Date().getFullYear()} FakeStore. All rights reserved</p>
-          <p>
+        <footer className="header py-1 px-10 text-center p-2">
+          <p className='p-1'>&copy; {new Date().getFullYear()} FakeStore. All rights reserved</p>
+          <p className='p-2'>
             Made with <FaHeart className="inline-block" /> by 
             <a
               href="https://www.linkedin.com/feed/"
