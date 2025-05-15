@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
@@ -10,51 +10,20 @@ function Cart() {
   const { cartId, setCartId, showMessage } = useCart();
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
+
   useEffect(() => {
+    
     if (!user) {
       navigate("/login");
       return;
     }
-    //   setLoading(true);
-    //   try {
-    //     let currentCart = cartId;
 
-    //     if (cartId.length === 0) {
-    //       const db = getFirestore();
-    //       const cartSnap = await getDoc(doc(db, "cart", user.uid));
-
-    //       if (cartSnap.exists()) {
-    //         currentCart = cartSnap.data().items || [];
-    //         setCartId(currentCart);
-    //       }
-    //     }
-
-    //     const items = await Promise.all(
-    //       currentCart.map(async (item) => {
-    //         const res = await fetch(
-    //           `https://fakestoreapi.com/products/${item.productId}`
-    //         );
-    //         const data = await res.json();
-    //         return { ...data, quantity: item.quantity };
-    //       })
-    //     );
-
-    //     setProducts(items);
-    //   } catch (error) {
-    //     console.error("Failed to fetch cart items:", error);
-    //     showMessage("error", "Failed to load cart.");
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-
-    async function fetchCartItems() {
+    const fetchCartItems = async () => {
       setLoading(true);
 
       try {
         let currentCart = cartId;
 
-       
         if (currentCart.length === 0) {
           const db = getFirestore();
           const cartRef = doc(db, "cart", user.uid);
@@ -66,65 +35,68 @@ function Cart() {
           }
         }
 
-      
-        const items = [];
-
-        for (let i = 0; i < currentCart.length; i++) {
-          const item = currentCart[i];
-          const response = await fetch(
-            `https://fakestoreapi.com/products/${item.productId}`
+        if (currentCart.length > 0) {
+          const items = await Promise.all(
+            currentCart.map(async (item) => {
+              const res = await fetch(
+                `https://fakestoreapi.com/products/${item.productId}`
+              );
+              const data = await res.json();
+              return { ...data, quantity: item.quantity };
+            })
           );
-          const product = await response.json();
 
-          // Add product with quantity to the list
-          items.push({ ...product, quantity: item.quantity });
+          setProducts(items);
         }
-
-        setProducts(items); 
       } catch (error) {
         console.error("Failed to fetch cart items:", error);
         showMessage("error", "Failed to load cart.");
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
-    }
+    };
 
     fetchCartItems();
-  }, [user,cartId]);
+  }, [user,cartId]); 
 
-  async function updateCart(updatedCart) {
+  const updateCart = async (updatedCart) => {
     const db = getFirestore();
     const cartRef = doc(db, "cart", user.uid);
-    await setDoc(cartRef, { items: updatedCart }, { merge: true });
-    setCartId(updatedCart);
-  }
 
-  function increment(id) {
-    const updated = cartId.map((item) =>
-      item.productId === id ? { ...item, quantity: item.quantity + 1 } : item
-    );
-    updateCart(updated);
-  }
+    try {
+      await setDoc(cartRef, { items: updatedCart }, { merge: true });
+      setCartId(updatedCart);
+    } catch (err) {
+      console.error("Failed to update cart:", err);
+      showMessage("error", "Could not update cart.");
+    }
+  };
 
-  function decrement(id) {
+  const handleQuantityChange = (id, delta) => {
     const updated = cartId.map((item) =>
-      item.productId === id && item.quantity > 1
-        ? { ...item, quantity: item.quantity - 1 }
+      item.productId === id
+        ? { ...item, quantity: Math.max(1, item.quantity + delta) }
         : item
     );
+    showMessage(
+      delta > 0 ? "success" : "error",
+      delta > 0 ? "Quantity increased" : "Quantity decreased"
+    );
     updateCart(updated);
-  }
+  };
 
-  function removeItem(id) {
+  const removeItem = (id) => {
     const updated = cartId.filter((item) => item.productId !== id);
+    showMessage("error", "Item removed from cart.");
     updateCart(updated);
-  }
+    setProducts((prev) => prev.filter((item) => item.id !== id));
+  };
 
-  function clearCart() {
+  const clearCart = () => {
     updateCart([]);
     setProducts([]);
     showMessage("success", "Cart cleared!");
-  }
+  };
 
   const total = products
     .reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -166,20 +138,21 @@ function Cart() {
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
-                  onClick={() => decrement(item.id)}
+                  className="px-2 py-1 bg-gray-200 rounded"
+                  onClick={() => handleQuantityChange(item.id, -1)}
+                  disabled={item.quantity === 1}
                 >
                   -
                 </button>
                 <span>{item.quantity}</span>
                 <button
-                  className="px-2 py-1 bg-gray-200 rounded cursor-pointer"
-                  onClick={() => increment(item.id)}
+                  className="px-2 py-1 bg-gray-200 rounded"
+                  onClick={() => handleQuantityChange(item.id, 1)}
                 >
                   +
                 </button>
                 <button
-                  className="text-red-600 ml-2 cursor-pointer"
+                  className="text-red-600 ml-2"
                   onClick={() => removeItem(item.id)}
                 >
                   🗑️
@@ -194,11 +167,11 @@ function Cart() {
           <div className="flex gap-4 mt-4 justify-center">
             <button
               onClick={clearCart}
-              className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 cursor-pointer"
+              className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600"
             >
               Clear Cart
             </button>
-            <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 cursor-pointer">
+            <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
               Place Order
             </button>
           </div>

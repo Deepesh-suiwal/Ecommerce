@@ -19,10 +19,16 @@ function CartProvider({ children }) {
       const db = getFirestore();
       const cartSnap = await getDoc(doc(db, "cart", user.uid));
       if (cartSnap.exists()) setCartId(cartSnap.data().items || []);
+      
+            const wishlistSnap = await getDoc(doc(db, "wishlist", user.uid));
+            if (wishlistSnap.exists()) setWishListId(wishlistSnap.data().items || []);
     }
+
     if (!user) console.log("NO USER FOUND");
     else fetchCart();
-  }, []);
+  }, [user]);
+
+
 
   function showMessage(type, text) {
     setMessage({ type, text });

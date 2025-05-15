@@ -6,7 +6,8 @@ import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 function Wishlist() {
   const { user } = useAuth();
-  const { setWishListId, wishListId } = useCart();
+  const { setWishListId, wishListId, showMessage, setCartId, cartId } =
+    useCart();
 
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -51,7 +52,6 @@ function Wishlist() {
         setLoading(false);
       }
     }
-
     fetchProducts();
   }, [user, wishListId]);
 
@@ -65,9 +65,44 @@ function Wishlist() {
     const db = getFirestore();
     const wishlistRef = doc(db, "wishlist", user.uid);
     await setDoc(wishlistRef, { items: updatedIds }, { merge: true });
+    showMessage("error", "items remove from cart");
 
     setWishListId(updatedIds);
     setItems((prev) => prev.filter((item) => item.id !== id));
+  }
+  async function handleAddToCart(productId) {
+    if (!user) return navigate("/login");
+
+    setLoading(true);
+    try {
+      const db = getFirestore();
+      const cartRef = doc(db, "cart", user.uid);
+      const cartSnap = await getDoc(cartRef);
+      const existingCart = cartSnap.exists() ? cartSnap.data().items || [] : [];
+
+      let updatedCart;
+      const found = existingCart.find((item) => item.productId === productId);
+      if (found) {
+        updatedCart = existingCart.map((item) =>
+          item.productId === productId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+        console.log(updatedCart);
+      } else {
+        updatedCart = [...existingCart, { productId, quantity: 1 }];
+        console.log(updatedCart);
+      }
+
+      await setDoc(cartRef, { items: updatedCart }, { merge: true });
+      setCartId(updatedCart);
+      showMessage("success", "Successfully added to cart!");
+    } catch (err) {
+      console.error(err);
+      showMessage("error", "Error adding to cart.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -106,7 +141,10 @@ function Wishlist() {
                 ${product.price}
               </p>
               <div className="flex justify-around p-4">
-                <button className="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 cursor-pointer">
+                <button
+                  className="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 cursor-pointer"
+                  onClick={() => handleAddToCart(product.id)}
+                >
                   🛒 Add to Cart
                 </button>
                 <button

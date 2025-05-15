@@ -7,7 +7,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 
 function Displaydata() {
-  const { cartId, setCartId, wishListId, setWishListId,showMessage} =
+  const { cartId, setCartId, wishListId, setWishListId, showMessage } =
     useCart();
   const { user } = useAuth();
   const [isUpdating, setIsUpdating] = useState(false);
@@ -30,7 +30,7 @@ function Displaydata() {
     }
 
     fetchUserData();
-  }, [user,cartId,wishListId]);
+  }, [user, cartId, wishListId]);
 
   async function handleAddToCart(productId) {
     if (!user) return navigate("/login");
@@ -50,7 +50,7 @@ function Displaydata() {
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
-        console.log(updatedCart);
+        
       } else {
         updatedCart = [...existingCart, { productId, quantity: 1 }];
         console.log(updatedCart);

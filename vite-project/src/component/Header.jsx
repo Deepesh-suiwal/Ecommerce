@@ -1,4 +1,4 @@
-import { useState, } from "react";
+import { useEffect, useState, } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartProvider";
@@ -17,6 +17,7 @@ function Header() {
 
   const { cartBuy, cartId, wishListId, message } = useCart();
 
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   function handleLogout() {
@@ -29,6 +30,7 @@ function Header() {
     setIsDropdownOpen((prev) => !prev);
   };
 
+
   return (
     <>
       <header className="header flex items-center justify-between py-1.5 px-[4rem] text-black font-[500] sticky top-0">
@@ -38,7 +40,7 @@ function Header() {
           <div
             className={`mb-4 p-2 absolute top-5 left-[45%] text-center rounded ${
               message.type === "error"
-                ? "bg-red-200 text-red-800"
+                ? "bg-red-300 text-red-800"
                 : "bg-green-400 text-green-900"
             }`}
           >
