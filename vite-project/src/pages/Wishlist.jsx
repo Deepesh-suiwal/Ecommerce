@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
-import { cartContext } from "../Home";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartProvider";
 import { useNavigate } from "react-router-dom";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 function Wishlist() {
-  const { wishListId, setWishListId } = useContext(cartContext);
   const { user } = useAuth();
+  const { setWishListId, wishListId } = useCart();
+
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,23 +25,26 @@ function Wishlist() {
 
         if (wishListId.length === 0) {
           const db = getFirestore();
-          const snap = await getDoc(doc(db, "wishlist", user.uid));
+          const cartRef = doc(db, "wishlist", user.uid);
+          const snap = await getDoc(cartRef);
+
           if (snap.exists()) {
             currentWishlist = snap.data().items || [];
             setWishListId(currentWishlist);
           }
         }
 
-        const products = await Promise.all(
-          currentWishlist.map(async (productId) => {
-            const res = await fetch(
-              `https://fakestoreapi.com/products/${productId}`
-            );
-            return await res.json();
-          })
-        );
+        const details = [];
+        for (let i = 0; i < currentWishlist.length; i++) {
+          const detail = currentWishlist[i];
+          const response = await fetch(
+            `https://fakestoreapi.com/products/${detail}`
+          );
+          const product = await response.json();
+          details.push(product);
+        }
 
-        setItems(products);
+        setItems(details);
       } catch (error) {
         console.error("Error loading wishlist items:", error);
       } finally {
@@ -49,7 +53,7 @@ function Wishlist() {
     }
 
     fetchProducts();
-  }, [user]);
+  }, [user, wishListId]);
 
   function shortText(text, max = 99) {
     return text.length > max ? text.substring(0, max) + "..." : text;

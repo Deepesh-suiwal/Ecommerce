@@ -1,16 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { cartContext } from "../Home";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
+
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartProvider";
 
 function Product({ product }) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const { cartId, setCartId, wishListId, setWishListId, showMessage } =
-    useContext(cartContext);
+    useCart();
 
   const [isUpdating, setIsUpdating] = useState(false);
 

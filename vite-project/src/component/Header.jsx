@@ -1,9 +1,9 @@
-import { useState, useContext } from "react";
+import { useState, } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartProvider";
 import { getAuth } from "firebase/auth";
 import app from "../firebase";
-import { cartContext } from "../Home";
 import { FaRegUserCircle, FaShoppingCart, FaHeart } from "react-icons/fa";
 import { FaUserLarge } from "react-icons/fa6";
 import { AiOutlineHeart } from "react-icons/ai";
@@ -15,7 +15,7 @@ function Header() {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, user } = useAuth();
 
-  const { cartBuy, cartId, wishListId, message } = useContext(cartContext);
+  const { cartBuy, cartId, wishListId, message } = useCart();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 

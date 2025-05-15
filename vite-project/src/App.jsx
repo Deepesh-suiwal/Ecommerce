@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import Products from "./component/Products";
-import { cartContext } from "./Home";
+import { useCart } from "./context/CartProvider";
 
 function App() {
-  const { products, fetchData } = useContext(cartContext);
+  const { products, fetchData } = useCart();
 
   useEffect(() => {
     fetchData();
