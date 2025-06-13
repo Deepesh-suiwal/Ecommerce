@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartProvider";
 
@@ -11,97 +11,7 @@ function Cart() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
 
-  useEffect(() => {
-    
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    const fetchCartItems = async () => {
-      setLoading(true);
-
-      try {
-        let currentCart = cartId;
-
-        if (currentCart.length === 0) {
-          const db = getFirestore();
-          const cartRef = doc(db, "cart", user.uid);
-          const cartSnap = await getDoc(cartRef);
-
-          if (cartSnap.exists()) {
-            currentCart = cartSnap.data().items || [];
-            setCartId(currentCart);
-          }
-        }
-
-        if (currentCart.length > 0) {
-          const items = await Promise.all(
-            currentCart.map(async (item) => {
-              const res = await fetch(
-                `https://fakestoreapi.com/products/${item.productId}`
-              );
-              const data = await res.json();
-              return { ...data, quantity: item.quantity };
-            })
-          );
-
-          setProducts(items);
-        }
-      } catch (error) {
-        console.error("Failed to fetch cart items:", error);
-        showMessage("error", "Failed to load cart.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCartItems();
-  }, [user,cartId]); 
-
-  const updateCart = async (updatedCart) => {
-    const db = getFirestore();
-    const cartRef = doc(db, "cart", user.uid);
-
-    try {
-      await setDoc(cartRef, { items: updatedCart }, { merge: true });
-      setCartId(updatedCart);
-    } catch (err) {
-      console.error("Failed to update cart:", err);
-      showMessage("error", "Could not update cart.");
-    }
-  };
-
-  const handleQuantityChange = (id, delta) => {
-    const updated = cartId.map((item) =>
-      item.productId === id
-        ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-        : item
-    );
-    showMessage(
-      delta > 0 ? "success" : "error",
-      delta > 0 ? "Quantity increased" : "Quantity decreased"
-    );
-    updateCart(updated);
-  };
-
-  const removeItem = (id) => {
-    const updated = cartId.filter((item) => item.productId !== id);
-    showMessage("error", "Item removed from cart.");
-    updateCart(updated);
-    setProducts((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const clearCart = () => {
-    updateCart([]);
-    setProducts([]);
-    showMessage("success", "Cart cleared!");
-  };
-
-  const total = products
-    .reduce((sum, item) => sum + item.price * item.quantity, 0)
-    .toFixed(2);
-
+  
   return (
     <div className="max-w-4xl mx-auto p-6 min-h-screen text-center">
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-2 justify-center">

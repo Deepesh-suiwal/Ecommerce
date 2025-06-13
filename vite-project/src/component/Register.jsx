@@ -1,10 +1,9 @@
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import app from "../firebase";
+
 import { useNavigate } from "react-router-dom";
 
-const auth = getAuth(app);
+
 
 function Register() {
   const navigate = useNavigate();
@@ -22,20 +21,7 @@ function Register() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const userDetails = await createUserWithEmailAndPassword(
-        auth,
-        form.email,
-        form.password
-      );
-
-      const check = userDetails.user;
-      setMessage({ type: "success", text: "Register successful!" });
-
-      if (check) {
-        setTimeout(() => {
-          navigate("/login");
-        }, 500);
-      }
+     console.log(form)
     } catch (error) {
       setMessage({ type: "error", text: error.message });
     }

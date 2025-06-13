@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -23,29 +23,6 @@ function Profile() {
     text: "",
   });
 
-  useEffect(() => {
-    async function fetchUserData() {
-      if (user) {
-        const db = getFirestore();
-        // console.log(user,"user");
-
-        const userRef = doc(db, "users", user.uid);
-        // console.log("Fetching for UID:", user?.uid);
-
-        const userSnap = await getDoc(userRef);
-        // console.log(userSnap.data());
-
-        if (userSnap.exists()) {
-          setUserData(userSnap.data());
-        } else {
-          console.log("No user data found");
-        }
-      }
-    }
-
-    fetchUserData();
-  }, [user]);
-
   console.log(user);
 
   function handleChange(e) {
@@ -59,37 +36,6 @@ function Profile() {
   async function handleSubmit(e) {
     e.preventDefault();
     console.log("Submitted data:", userData);
-    setIsUpdating(true);
-    try {
-      const db = getFirestore();
-      await setDoc(
-        doc(db, "users", user.uid),
-        { ...userData },
-        { merge: true }
-      );
-      setIsUpdating(false);
-      setMessage({
-        type: "success",
-        text: "Profile Updated!!!",
-      });
-      const timeoutId = setTimeout(() => {
-        setMessage({ type: "", text: "" });
-      }, 500);
-
-      return () => clearTimeout(timeoutId);
-    } catch (error) {
-      console.log(error);
-      setMessage({
-        type: "error",
-        text: "There is a problem in submitting the form",
-      });
-      setIsUpdating(false);
-      const timeoutId = setTimeout(() => {
-        setMessage({ type: "", text: "" });
-      }, 500);
-
-      return () => clearTimeout(timeoutId);
-    }
   }
 
   function Skip() {

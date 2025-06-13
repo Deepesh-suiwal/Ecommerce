@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
 import Products from "./component/Products";
 import { useCart } from "./context/CartProvider";
 

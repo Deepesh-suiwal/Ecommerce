@@ -1,34 +1,16 @@
-import React, { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
 const CartContext = createContext();
 
 function CartProvider({ children }) {
   const [cartBuy, setCartBuy] = useState([]);
-   const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [cartId, setCartId] = useState([]);
   const [wishListId, setWishListId] = useState([]);
   const [message, setMessage] = useState({ type: "", text: "" });
   const [localQuantity, setLocalQuantity] = useState("");
   const { user } = useAuth();
-
-  useEffect(() => {
-    async function fetchCart() {
-      const db = getFirestore();
-      const cartSnap = await getDoc(doc(db, "cart", user.uid));
-      if (cartSnap.exists()) setCartId(cartSnap.data().items || []);
-      
-            const wishlistSnap = await getDoc(doc(db, "wishlist", user.uid));
-            if (wishlistSnap.exists()) setWishListId(wishlistSnap.data().items || []);
-    }
-
-    if (!user) console.log("NO USER FOUND");
-    else fetchCart();
-  }, [user]);
-
-
 
   function showMessage(type, text) {
     setMessage({ type, text });
@@ -40,55 +22,15 @@ function CartProvider({ children }) {
     setProducts(response.data);
   }
 
-  function isProductInCart(product) {
-    const productFound = cartBuy.some((cartItems) => {
-      return cartItems.id == product.id;
-    });
-    return productFound;
-  }
-
-  function increaseNumber(product) {
-    setCartBuy(
-      cartBuy.map((existingProduct) =>
-        existingProduct.id === product.id
-          ? { ...existingProduct, quantity: existingProduct.quantity + 1 }
-          : existingProduct
-      )
-    );
-  }
-
-  function decreaseNumber(Product) {
-    setCartBuy(
-      cartBuy.map((existingProduct) =>
-        existingProduct.id === Product.id
-          ? {
-              ...existingProduct,
-              quantity: Math.max(existingProduct.quantity - 1, 1),
-            }
-          : existingProduct
-      )
-    );
-  }
-
-  function deleteCart(Product) {
-    setCartBuy(
-      cartBuy.filter((obj) => {
-        return obj.id !== Product.id;
-      })
-    );
-  }
   return (
     <CartContext.Provider
       value={{
         cartBuy,
         setCartBuy,
-        isProductInCart,
+
         localQuantity,
         setLocalQuantity,
-        increaseNumber,
-        decreaseNumber,
-        deleteCart,
-        cartId,
+
         setCartId,
         setWishListId,
         wishListId,

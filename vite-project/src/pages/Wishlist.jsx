@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartProvider";
 import { useNavigate } from "react-router-dom";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 function Wishlist() {
   const { user } = useAuth();
@@ -13,97 +12,97 @@ function Wishlist() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate("/login");
+  //     return;
+  //   }
 
-    async function fetchProducts() {
-      setLoading(true);
-      try {
-        let currentWishlist = wishListId;
+  //   async function fetchProducts() {
+  //     setLoading(true);
+  //     try {
+  //       let currentWishlist = wishListId;
 
-        if (wishListId.length === 0) {
-          const db = getFirestore();
-          const cartRef = doc(db, "wishlist", user.uid);
-          const snap = await getDoc(cartRef);
+  //       if (wishListId.length === 0) {
+  //         const db = getFirestore();
+  //         const cartRef = doc(db, "wishlist", user.uid);
+  //         const snap = await getDoc(cartRef);
 
-          if (snap.exists()) {
-            currentWishlist = snap.data().items || [];
-            setWishListId(currentWishlist);
-          }
-        }
+  //         if (snap.exists()) {
+  //           currentWishlist = snap.data().items || [];
+  //           setWishListId(currentWishlist);
+  //         }
+  //       }
 
-        const details = [];
-        for (let i = 0; i < currentWishlist.length; i++) {
-          const detail = currentWishlist[i];
-          const response = await fetch(
-            `https://fakestoreapi.com/products/${detail}`
-          );
-          const product = await response.json();
-          details.push(product);
-        }
+  //       const details = [];
+  //       for (let i = 0; i < currentWishlist.length; i++) {
+  //         const detail = currentWishlist[i];
+  //         const response = await fetch(
+  //           `https://fakestoreapi.com/products/${detail}`
+  //         );
+  //         const product = await response.json();
+  //         details.push(product);
+  //       }
 
-        setItems(details);
-      } catch (error) {
-        console.error("Error loading wishlist items:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProducts();
-  }, [user, wishListId]);
+  //       setItems(details);
+  //     } catch (error) {
+  //       console.error("Error loading wishlist items:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  //   fetchProducts();
+  // }, [user, wishListId]);
 
-  function shortText(text, max = 99) {
-    return text.length > max ? text.substring(0, max) + "..." : text;
-  }
+  // function shortText(text, max = 99) {
+  //   return text.length > max ? text.substring(0, max) + "..." : text;
+  // }
 
-  async function removeFromWishlist(id) {
-    const updatedIds = wishListId.filter((itemId) => itemId !== id);
+  // async function removeFromWishlist(id) {
+  //   const updatedIds = wishListId.filter((itemId) => itemId !== id);
 
-    const db = getFirestore();
-    const wishlistRef = doc(db, "wishlist", user.uid);
-    await setDoc(wishlistRef, { items: updatedIds }, { merge: true });
-    showMessage("error", "items remove from cart");
+  //   const db = getFirestore();
+  //   const wishlistRef = doc(db, "wishlist", user.uid);
+  //   await setDoc(wishlistRef, { items: updatedIds }, { merge: true });
+  //   showMessage("error", "items remove from cart");
 
-    setWishListId(updatedIds);
-    setItems((prev) => prev.filter((item) => item.id !== id));
-  }
-  async function handleAddToCart(productId) {
-    if (!user) return navigate("/login");
+  //   setWishListId(updatedIds);
+  //   setItems((prev) => prev.filter((item) => item.id !== id));
+  // }
+  // async function handleAddToCart(productId) {
+  //   if (!user) return navigate("/login");
 
-    setLoading(true);
-    try {
-      const db = getFirestore();
-      const cartRef = doc(db, "cart", user.uid);
-      const cartSnap = await getDoc(cartRef);
-      const existingCart = cartSnap.exists() ? cartSnap.data().items || [] : [];
+  //   setLoading(true);
+  //   try {
+  //     const db = getFirestore();
+  //     const cartRef = doc(db, "cart", user.uid);
+  //     const cartSnap = await getDoc(cartRef);
+  //     const existingCart = cartSnap.exists() ? cartSnap.data().items || [] : [];
 
-      let updatedCart;
-      const found = existingCart.find((item) => item.productId === productId);
-      if (found) {
-        updatedCart = existingCart.map((item) =>
-          item.productId === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-        console.log(updatedCart);
-      } else {
-        updatedCart = [...existingCart, { productId, quantity: 1 }];
-        console.log(updatedCart);
-      }
+  //     let updatedCart;
+  //     const found = existingCart.find((item) => item.productId === productId);
+  //     if (found) {
+  //       updatedCart = existingCart.map((item) =>
+  //         item.productId === productId
+  //           ? { ...item, quantity: item.quantity + 1 }
+  //           : item
+  //       );
+  //       console.log(updatedCart);
+  //     } else {
+  //       updatedCart = [...existingCart, { productId, quantity: 1 }];
+  //       console.log(updatedCart);
+  //     }
 
-      await setDoc(cartRef, { items: updatedCart }, { merge: true });
-      setCartId(updatedCart);
-      showMessage("success", "Successfully added to cart!");
-    } catch (err) {
-      console.error(err);
-      showMessage("error", "Error adding to cart.");
-    } finally {
-      setLoading(false);
-    }
-  }
+  //     await setDoc(cartRef, { items: updatedCart }, { merge: true });
+  //     setCartId(updatedCart);
+  //     showMessage("success", "Successfully added to cart!");
+  //   } catch (err) {
+  //     console.error(err);
+  //     showMessage("error", "Error adding to cart.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
   return (
     <div className="p-3 min-h-screen">

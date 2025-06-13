@@ -1,15 +1,13 @@
-import { useEffect, useState, } from "react";
+import {  useState, } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartProvider";
-import { getAuth } from "firebase/auth";
-import app from "../firebase";
 import { FaRegUserCircle, FaShoppingCart, FaHeart } from "react-icons/fa";
 import { FaUserLarge } from "react-icons/fa6";
 import { AiOutlineHeart } from "react-icons/ai";
 import { MdOutlineShoppingCart, MdLogout } from "react-icons/md";
 
-const auth = getAuth(app);
+
 
 function Header() {
   const navigate = useNavigate();
@@ -21,9 +19,7 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   function handleLogout() {
-    auth.signOut();
-    setIsLoggedIn(false);
-    navigate("/login");
+   
   }
 
   const toggleDropdown = () => {

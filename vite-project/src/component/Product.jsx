@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
-
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartProvider";
 
@@ -16,22 +14,6 @@ function Product({ product }) {
 
   const [isUpdating, setIsUpdating] = useState(false);
 
-  useEffect(() => {
-    if (!user) return;
-
-    async function fetchUserData() {
-      const db = getFirestore();
-
-      const cartSnap = await getDoc(doc(db, "cart", user.uid));
-      if (cartSnap.exists()) setCartId(cartSnap.data().items || []);
-
-      const wishlistSnap = await getDoc(doc(db, "wishlist", user.uid));
-      if (wishlistSnap.exists()) setWishListId(wishlistSnap.data().items || []);
-    }
-
-    fetchUserData();
-  }, [user]);
-
   function shortText(text, max = 100) {
     return text.length > max ? text.slice(0, max) + "..." : text;
   }
@@ -40,68 +22,9 @@ function Product({ product }) {
     navigate(`/product/${product.id}`, { state: { product } });
   }
 
-  async function handleAddToCart(productId) {
-    if (!user) return navigate("/login");
+  async function handleAddToCart(productId) {}
 
-    setIsUpdating(true);
-    try {
-      const db = getFirestore();
-      const cartRef = doc(db, "cart", user.uid);
-      const cartSnap = await getDoc(cartRef);
-      const existingCart = cartSnap.exists() ? cartSnap.data().items || [] : [];
-
-      let updatedCart;
-      const found = existingCart.find((item) => item.productId === productId);
-      if (found) {
-        updatedCart = existingCart.map((item) =>
-          item.productId === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-        console.log(updatedCart);
-      } else {
-        updatedCart = [...existingCart, { productId, quantity: 1 }];
-        console.log(updatedCart);
-      }
-
-      await setDoc(cartRef, { items: updatedCart }, { merge: true });
-      setCartId(updatedCart);
-      showMessage("success", "Successfully added to cart!");
-    } catch (err) {
-      console.error(err);
-      showMessage("error", "Error adding to cart.");
-    } finally {
-      setIsUpdating(false);
-    }
-  }
-
-  async function handleWishList(productId) {
-    if (!user) return navigate("/login");
-
-    if (wishListId.includes(productId)) {
-      showMessage("success", "Item already in Wishlist!");
-      return;
-    }
-
-    setIsUpdating(true);
-    try {
-      const updatedWishlist = wishListId.includes(productId)
-        ? wishListId
-        : [...wishListId, productId];
-
-      const db = getFirestore();
-      const wishlistRef = doc(db, "wishlist", user.uid);
-      await setDoc(wishlistRef, { items: updatedWishlist }, { merge: true });
-
-      setWishListId(updatedWishlist);
-      showMessage("success", "Added to Wishlist!");
-    } catch (err) {
-      console.error(err);
-      showMessage("error", "Error adding to Wishlist.");
-    } finally {
-      setIsUpdating(false);
-    }
-  }
+  async function handleWishList(productId) {}
 
   return (
     <div className="parent">

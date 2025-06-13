@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import First from "./component/First";
 import App from "./App";
