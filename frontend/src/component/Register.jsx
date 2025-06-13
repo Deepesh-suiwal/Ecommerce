@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 
-
 function Register() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
