@@ -1,20 +1,31 @@
-
+import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
-
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(false);
 
+  useEffect(() => {
+    checkToken();
+  }, []);
 
+  const checkToken = async () => {
+    try {
+      const res = await instance.get("/auth/checkToken", {
+        withCredentials: true,
+      });
+      if (res.status === 200) {
+        setUser(true);
+      }
+    } catch (error) {
+      setUser(false);
+      console.log(error);
+    }
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading, isLoggedIn, setIsLoggedIn }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
   );
 }
 

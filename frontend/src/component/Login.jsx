@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
-
+import instance from "../axiosConfig";
 
 function Login() {
   const navigate = useNavigate();
@@ -24,8 +23,16 @@ function Login() {
   };
 
   async function handleSubmit(e) {
-    e.preventDefault();
-    
+    try {
+      e.preventDefault();
+      const res = await instance.post("/auth/login", form);
+      setMessage({ type: "success", text: "You are Successfully login" });
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      setMessage({ type: "error", text: message.error });
+    }
   }
 
   return (
@@ -69,7 +76,7 @@ function Login() {
           Login
         </button>
         <p className="mt-4 text-center">
-          Don't have an account?{" "}
+          Don't have an account?
           <Link to="/register" className="text-blue-500">
             Register
           </Link>

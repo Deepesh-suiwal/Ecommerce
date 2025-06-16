@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import instance from "../axiosConfig.js";
 import { useNavigate } from "react-router-dom";
-
 
 function Register() {
   const navigate = useNavigate();
@@ -20,7 +19,14 @@ function Register() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-     console.log(form)
+      const response = await instance.post("/auth/register", form);
+      console.log(response);
+      if (response.status === 201) {
+        setMessage({ type: "success", text: "User Successfully registered" });
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
     }
