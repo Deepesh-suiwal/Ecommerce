@@ -8,9 +8,9 @@ function ProtectedRoute({ children }) {
 
   useEffect(() => {
     if (!user) {
-      return naviagte("/login");
+      naviagte("/login");
     }
-  }, [user]);
+  }, []);
 
   return user ? children : null;
 }

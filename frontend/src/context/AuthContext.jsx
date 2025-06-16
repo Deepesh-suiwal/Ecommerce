@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
+import instance from "../axiosConfig";
 
 const AuthContext = createContext();
 
@@ -8,7 +9,9 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     checkToken();
-  }, []);
+  }, [user]);
+
+  console.log(user)
 
   const checkToken = async () => {
     try {
@@ -25,7 +28,7 @@ function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user,setUser}}>{children}</AuthContext.Provider>
   );
 }
 

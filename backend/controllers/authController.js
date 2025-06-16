@@ -55,7 +55,7 @@ export async function login(req, res, next) {
       .cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "None" : "strict",
+        sameSite: "strict",
         maxAge: 2 * 60 * 60 * 1000,
       })
       .status(200)
@@ -79,18 +79,40 @@ export async function login(req, res, next) {
 //   }
 // }
 
+// export const checkToken = (req, res) => {
+//   // console.log("first")
+//   const {token} = req.cookies.token;
+//   console.log("token is ",token);
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     return res.status(200).json({
+//       user,
+//       decoded,
+//     });
+//   } catch {
+//     return res.status(401).json({
+//       message: "Invalid token",
+//     });
+//   }
+// };
+
+
 export const checkToken = (req, res) => {
-  const { token } = req.cookies;
+  const {token} = req.cookies
+  console.log("Token is", token);
+
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     return res.status(200).json({
-      user,
       decoded,
     });
-  } catch {
+  } catch (error) {
     return res.status(401).json({
-      message: "Invalid",
-      error,
+      message: "Invalid token",
     });
   }
 };

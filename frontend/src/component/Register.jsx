@@ -19,7 +19,9 @@ function Register() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await instance.post("/auth/register", form);
+      const response = await instance.post("/auth/register", form,{
+        withCredentials: true,
+      });
       console.log(response);
       if (response.status === 201) {
         setMessage({ type: "success", text: "User Successfully registered" });

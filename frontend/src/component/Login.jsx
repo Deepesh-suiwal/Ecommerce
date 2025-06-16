@@ -15,7 +15,7 @@ function Login() {
     text: "",
   });
 
-  const { setIsLoggedIn } = useAuth();
+  const { setUser } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,8 +25,14 @@ function Login() {
   async function handleSubmit(e) {
     try {
       e.preventDefault();
-      const res = await instance.post("/auth/login", form);
+      const res = await instance.post("/auth/login", form, {
+        withCredentials: true,
+      });
       setMessage({ type: "success", text: "You are Successfully login" });
+      if (res.status === 200) {
+        setUser(true);
+        navigate("/");
+      }
 
       console.log(res);
     } catch (error) {

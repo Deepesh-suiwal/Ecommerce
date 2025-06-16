@@ -1,4 +1,4 @@
-import {  useState, } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartProvider";
@@ -7,25 +7,19 @@ import { FaUserLarge } from "react-icons/fa6";
 import { AiOutlineHeart } from "react-icons/ai";
 import { MdOutlineShoppingCart, MdLogout } from "react-icons/md";
 
-
-
 function Header() {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, user } = useAuth();
 
   const { cartBuy, cartId, wishListId, message } = useCart();
 
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  function handleLogout() {
-   
-  }
+  function handleLogout() {}
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
-
 
   return (
     <>
@@ -69,11 +63,6 @@ function Header() {
             <Link to="/wishlist" className="flex items-center gap-2">
               <span className="relative flex items-center">
                 <FaHeart />
-                {user && (
-                  <span className="absolute top-[-10px] right-[-10px] bg-rose-400 font-bold text-black rounded-full w-4 h-4 flex justify-center items-center text-xs">
-                    {wishListId.length}
-                  </span>
-                )}
               </span>
             </Link>
           </li>
@@ -84,11 +73,6 @@ function Header() {
             <Link to="/cart" className="flex items-center gap-2">
               <span className="relative flex items-center">
                 <FaShoppingCart />
-                {user && (
-                  <span className="absolute top-[-10px] right-[-10px] bg-rose-400 font-bold text-black rounded-full w-4 h-4 flex justify-center items-center text-xs">
-                    {cartId.length}
-                  </span>
-                )}
               </span>
             </Link>
           </li>
